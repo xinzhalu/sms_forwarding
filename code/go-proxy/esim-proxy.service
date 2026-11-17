@@ -1,0 +1,29 @@
+[Unit]
+Description=eSIM RSP Notification Proxy
+Documentation=https://github.com/Q303835/sms_forwarding
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# 前面挂 nginx/caddy 时监听回环即可;要直接对外改成 :8080
+ExecStart=/opt/esim-proxy/esim-proxy -addr 127.0.0.1:8080 -allow-hosts smdp.example.com
+Restart=on-failure
+RestartSec=3s
+
+DynamicUser=yes
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryMax=64M
+
+[Install]
+WantedBy=multi-user.target
